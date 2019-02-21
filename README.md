@@ -226,5 +226,5 @@ Perbedaan antara poin b dan c terletak pada
   
 * Crontabnya
 
-> @hourly /bin/bash /home/arvanna/soal5.sh
+      @hourly /bin/bash /home/arvanna/soal5.sh
 
