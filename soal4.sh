@@ -2,7 +2,7 @@
 #encrypt
 
 #ambiljam
-waktu=`date "+%X" | awk -F : '{print $1}'`
+waktu=$(date "+%X" | awk -F : '{print $1}')
 #konvert string ke int
 waktu=$(echo "$waktu" | bc)
 
@@ -11,7 +11,7 @@ kecil=$(($waktu + 97))
 kecil=$(printf \\$(printf '%03o' $kecil))
 #batas atas z ke huruf lain dengan mengembalikin ascii ke decimal lalu ke ascii lagi
 bawah=$(printf '%d' "'$kecil")
-bawah=$(($bawah-1))
+let bawah--
 if [ $bawah -lt 97 ]
 then
   bawah=122
@@ -41,7 +41,7 @@ cat /var/log/syslog | tr [a-z] ["$kecil"-za-"$bawah"] | tr [A-Z] ["$besar"-ZA-"$
 
 
 #decrypt
-waktu=$(($waktu-1))
+let waktu--
 #batas bawah huruf kecil decimal ascii
 dkecil=$((122-$waktu))
 if [ $dkecil -gt 122 ]
