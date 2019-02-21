@@ -22,7 +22,7 @@
 # m h  dom mon dow   command
 
 14 14 14 2 * /bin/bash /home/arvanna/soal1.sh
-0 0 * 2 Fri /bin/bash /home/arvanna/soal1.sh
+14 14 * 2 Fri /bin/bash /home/arvanna/soal1.sh
 2-30/6 * * * * /bin/bash /home/arvanna/soal5.sh
 * 1 * * * /home/arvanna/soal4.sh
 
