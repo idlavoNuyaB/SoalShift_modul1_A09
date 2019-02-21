@@ -2,13 +2,16 @@
 
 Jawaban Praktikum Sistem Operasi Modul 1
 
-Soal no 1
-
-Anda diminta tolong oleh teman anda untuk mengembalikan filenya yang telah dienkripsi oleh seseorang menggunakan bash script, file yang dimaksud adalah nature.zip. Karena terlalu mudah kalian memberikan syarat akan membuka seluruh file tersebut jika pukul 14:14 pada tanggal 14 Februari atau hari tersebut adalah hari jumat pada bulan Februari.
+1. Anda diminta tolong oleh teman anda untuk mengembalikan filenya yang telah dienkripsi oleh seseorang menggunakan bash script, file yang dimaksud adalah nature.zip. Karena terlalu mudah kalian memberikan syarat akan membuka seluruh file tersebut jika pukul 14:14 pada tanggal 14 Februari atau hari tersebut adalah hari jumat pada bulan Februari.
 
 Hint: Base64, Hexdump
 
-Langkahnya:
+<h3>Jawab :
+  
+[Source Code][https://github.com/idlavoNuyaB/SoalShift_modul1_A09/blob/master/soal1.sh]
+
+<h3>Langkahnya :
+    
 a. buat scriptnya untuk mendecrypt
 
 cd Downloads -> untuk berpindah ke downloads
@@ -20,11 +23,13 @@ base64 -d -> decode tiap file di folder nature
 xxd -r -> hexdump reverse tiap file di folder nature
 
 b. buat crontabnya
+> 14 14 14 2 * /bin/bash /home/arvanna/soal1.sh
+> 14 14 * 2 Fri /bin/bash /home/arvanna/soal1.sh
 
 
-Soal no 2
+2. Soal no 2
 
-Soal no 3
+3. Soal no 3
 
 awal-awal pastikan sudah terinstall pwgen, jika belum lakukan apt-get install pwgen
 
@@ -108,6 +113,6 @@ fi
 
 done
 
-soal no 4
+4. soal no 4
 
-soal no 5
+5. soal no 5
