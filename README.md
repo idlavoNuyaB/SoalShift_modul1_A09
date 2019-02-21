@@ -2,117 +2,229 @@
 
 Jawaban Praktikum Sistem Operasi Modul 1
 
-1. Anda diminta tolong oleh teman anda untuk mengembalikan filenya yang telah dienkripsi oleh seseorang menggunakan bash script, file yang dimaksud adalah nature.zip. Karena terlalu mudah kalian memberikan syarat akan membuka seluruh file tersebut jika pukul 14:14 pada tanggal 14 Februari atau hari tersebut adalah hari jumat pada bulan Februari.
+1. Anda diminta tolong oleh teman anda untuk mengembalikan filenya yang telah dienkripsi oleh seseorang menggunakan bash script, file yang dimaksud adalah nature.zip. Karena terlalu mudah kalian memberikan syarat akan membuka seluruh file tersebut jika pukul 14:14 pada tanggal 14 Februari atau hari tersebut adalah hari jumat pada bulan Februari. Hint: Base64, Hexdump
 
-Hint: Base64, Hexdump
-
-<h3>Jawab :
+<h3>Jawab : </h3>
   
-[Source Code][https://github.com/idlavoNuyaB/SoalShift_modul1_A09/blob/master/soal1.sh]
+[Source Code](https://github.com/idlavoNuyaB/SoalShift_modul1_A09/blob/master/soal1.sh)
 
-<h3>Langkahnya :
+<h3>Langkahnya : </h3>
     
 a. buat scriptnya untuk mendecrypt
 
-cd Downloads -> untuk berpindah ke downloads
+    cd Downloads -> untuk berpindah ke downloads
+  
+    unzip nature.zip -> untuk mengekstrak nature.zip ke folder nature
 
-unzip nature.zip -> untuk mengekstrak nature.zip ke folder nature
+    base64 -d -> decode tiap file di folder nature
 
-base64 -d -> decode tiap file di folder nature
-
-xxd -r -> hexdump reverse tiap file di folder nature
+    xxd -r -> hexdump reverse tiap file di folder nature
 
 b. buat crontabnya
-> 14 14 14 2 * /bin/bash /home/arvanna/soal1.sh
-> 14 14 * 2 Fri /bin/bash /home/arvanna/soal1.sh
 
+    14 14 14 2 * /bin/bash /home/arvanna/soal1.sh
 
-2. Soal no 2
+    14 14 * 2 Fri /bin/bash /home/arvanna/soal1.sh
 
-3. Soal no 3
+2. Anda merupakan pegawai magang pada sebuah perusahaan retail, dan anda diminta untuk memberikan laporan berdasarkan file WA_Sales_Products_2012-14.csv. Laporan yang diminta berupa:
 
-awal-awal pastikan sudah terinstall pwgen, jika belum lakukan apt-get install pwgen
+    a. Tentukan negara dengan penjualan(quantity) terbanyak pada tahun 2012.
 
-lakukan inisialisasi variabel a='password' , b=1 , x= 1, var='a' dan value='b'
+    b. Tentukan tiga product line yang memberikan penjualan(quantity) terbanyak pada soal poin a.
 
-lakukan while [ -e $a$b.txt ] untuk mencheck apakah file password’b’.txt ada atau tidak
+    c. Tentukan tiga product yang memberikan penjualan(quantity) terbanyak berdasarkan tiga product line yang didapatkan pada soal poin b.
 
-lakukan b=$((b+1)) jika sudah ada b++ untuk membuat file baru yang nama beda
+<h3>Jawab : </h3>
+  
+[Source Code](https://github.com/idlavoNuyaB/SoalShift_modul1_A09/blob/master/soal2.sh)
 
-lakukan while [ $x -ne $b -a $b -ne 1 ] sebagai fungsi loop untuk mencheck apakah file lama ada yang sama atau tidak 
+<h3>Langkahnya : </h3>
 
-if [ -e $a$b.txt ] digunakan untuk memasukkan isi file ke variable untuk dibandingkan 1 1
+a. Mencari negara dengan penjualan terbanyak pada tahun 2012
 
-var=$(<$a$b.txt)
+    awk -F , '{if($7 == 2012) i[$1]+=$10} END {for(x in i) print i[x] "," x}' WA_Sales_Products_2012-14.csv | sort -nr  | head -1 | awk -F , '{print $2}'
 
-value=$(<$a$x.txt)
+**Keterangan : **
+ 
+* {if($7 == 2012) i[$1]+=$10} digunakan untuk menghitung kolom 10 berdasarkan jumlahnya menurut indeks negaranya
 
-fi
+* {for(x in i) print i[x] "," x} digunakan untuk mencetak jumlah dari kolom 10 dan negaranya dibatasi dengan koma
 
-if [ "$var" != "$value" ] -> jika isi file tidak sama maka lanjut dibandingkan dengan index lainnya
+* sort -nr digunakan untuk mengurutkan dari besar ke kecil
 
-then
+* head -1 digunakan untuk menampilkan data yang paling atas
 
-x=$((x+1))
+* awk -F , '{print $2}' digunakan untuk hanya mencetak bagian kedua yang merupakan negara
 
-elif [ "$var" == "$value" ] -> jika isi file sama, kita generate ulang passwordnya dan dicek lagi
+b. Mencari tiga *product line* yang memberikan jumlah terbanyak menurut poin a
 
-then
+    awk -F , '{if($7 == 2012 && $1 == "United States") i[$4]+=$10} END  {for(y in i)print i[y] "," y}' WA_Sales_Products_2012-14.csv | sort -nr  | head -3 | awk -F , '{print $2}'
 
-x=1
+**Keterangan : **
 
-pwgen 12 1 -c -n -s > $a$b.txt -> untuk menggenerate password
+Perbedaan antara poin a dengan b terletak pada 
 
-var=$(<$a$b.txt)
+* syaratnya ditambah dengan negara yang memberikan jumlah terbanyak, yaitu United States
 
-else
+* indeks yang digunakan untuk menghitung kolom 10 sekarang berdasarkan product line
 
-break;
+c. Mencari tiga *product* yang memberikan jumlah terbanyak menurut poin b
 
-fi
+    awk -F , '{if($7 == 2012 && $1 == "United States" && ($4 == "Personal Accessories" || $4 == "Camping Equipment" || $4 == "Outdoor Protection")) i[$6]+=$10} END  {for(x in i) print i[x] "," x}' WA_Sales_Products_2012-14.csv | sort -nr  | head -3 | awk -F , '{print $2}'
+    
+**Keterangan : **
 
-done
+Perbedaan antara poin b dan c terletak pada
 
-x=1
+* syaratnya ditambah dengan product line yang memberikan jumlah terbanyak, yaitu *Personal Accesories*, *Camping Equipment* dan *Outdoor Protection*.
 
-done
+* indeks yang digunakan untuk menghitung kolom sekarang berdasarkan *product*
 
-pwgen 12 1 -c -n -s > $a$b.txt -> untuk menggenerate password untuk file paling baru
+3. Buatlah sebuah script bash yang dapat menghasilkan password secara acak sebanyak 12 karakter yang terdapat huruf besar, huruf kecil, dan angka. Password acak tersebut disimpan pada file berekstensi .txt dengan ketentuan pemberian nama sebagai berikut:
 
-var=$(<$a$b.txt)
+    a. Jika tidak ditemukan file password1.txt maka password acak tersebut disimpan pada file bernama password1.txt
 
-c=1
+    b. Jika file password1.txt sudah ada maka password acak baru akan disimpan pada file bernama password2.txt dan begitu seterusnya.
 
-while [ $c -ne $b -a $b -ne 1 ] -> digunakan untuk mencheck apakah file yang baru sama atau tidak dengan yang lain
+    c. Urutan nama file tidak boleh ada yang terlewatkan meski filenya dihapus.
 
-do
+    d. Password yang dihasilkan tidak boleh sama.
 
-value=$(<$a$c.txt)
+<h3>Jawab : </h3>
+  
+[Source Code](https://github.com/idlavoNuyaB/SoalShift_modul1_A09/blob/master/soal3.sh)
 
-if [ "$var" != "$value" ] -> jika tidak sama lanjut sampai index check terakhir
+<h3>Langkahnya : </h3>
 
-then
+* awal-awal pastikan sudah terinstall pwgen, jika belum lakukan apt-get install pwgen
 
-c=$((c+1))
+* lakukan inisialisasi variabel a='password' , b=1 , x= 1, var='a' dan value='b'
 
-elif [ "$var" == "$value" ] -> jika sama akan menggenerate password baru
+* lakukan while [ -e $a$b.txt ] untuk mencheck apakah file password’b’.txt ada atau tidak
 
-then
+* lakukan b=$((b+1)) jika sudah ada b++ untuk membuat file baru yang nama beda
 
-c=1
+* lakukan while [ $x -ne $b -a $b -ne 1 ] sebagai fungsi loop untuk mencheck apakah file lama ada yang sama atau tidak 
 
-pwgen 12 1 -c -n -s > $a$b.txt
+* if [ -e $a$b.txt ] digunakan untuk memasukkan isi file ke variable untuk dibandingkan 1 1
 
-var=$(<$a$b.txt)
+* if [ "$var" != "$value" ] -> jika isi file tidak sama maka lanjut dibandingkan dengan index lainnya
 
-else
+* elif [ "$var" == "$value" ] -> jika isi file sama, kita generate ulang passwordnya dan dicek lagi
 
-break;
+* pwgen 12 1 -c -n -s > $a$b.txt -> untuk menggenerate password
 
-fi
+* pwgen 12 1 -c -n -s > $a$b.txt -> untuk menggenerate password untuk file paling baru
 
-done
+* while [ $c -ne $b -a $b -ne 1 ] -> digunakan untuk mencheck apakah file yang baru sama atau tidak dengan yang lain
 
-4. soal no 4
+* if [ "$var" != "$value" ] -> jika tidak sama lanjut sampai index check terakhir
 
-5. soal no 5
+* elif [ "$var" == "$value" ] -> jika sama akan menggenerate password baru
+
+4.Lakukan backup file syslog setiap jam dengan format nama file “jam:menit tanggal- bulan-tahun”. Isi dari file backup terenkripsi dengan konversi huruf (string manipulation) yang disesuaikan dengan jam dilakukannya backup misalkan sebagai berikut:
+
+   a. Huruf b adalah alfabet kedua, sedangkan saat ini waktu menunjukkan pukul 12, sehingga huruf b diganti dengan huruf alfabet yang memiliki urutan ke 12+2 = 14.
+
+   b. Hasilnya huruf b menjadi huruf n karena huruf n adalah huruf ke empat belas, dan seterusnya.
+
+   c. setelah huruf z akan kembali ke huruf a
+
+   d. Backup file syslog setiap jam.
+
+   e. dan buatkan juga bash script untuk dekripsinya.
+
+<h3>Jawab : </h3>
+  
+[Source Code](https://github.com/idlavoNuyaB/SoalShift_modul1_A09/blob/master/soal4.sh)
+
+<h3>Langkahnya : </h3>
+
+* Backup dan Enkripsi
+
+  * waktu=$(date "+%X" | awk -F : '{print $1}') digunakan untuk mengambil jamnya
+
+  * waktu=$(echo "$waktu" | bc) digunakan untuk mengkonversikan string jam menjadi integer
+
+  * Mencari batas bawah dan atas huruf kecil dari 97 - 122
+    
+    * kecil=$(printf \\$(printf '%03o' $kecil)) digunakan untuk mengubah nilai desimal ke ASCII karakter batas bawah
+
+    * bawah=$(printf '%d' "'$kecil") digunakan untuk mengubah karakter ASCII ke nilai desimal berdasarkan variabel kecil
+    
+    * bawah=$(printf \\$(printf '%03o' $bawah)) mengembalikan ke karakter ASCII batas atas
+  
+  * Mencari batas bawah dan atas huruf besar 65 -90
+
+    * besar=$(printf \\$(printf '%03o' $besar)) digunakan untuk mengubah nilai desimal ke ASCII karakter batas bawah
+
+    * atas=$(printf '%d' "'$besar") digunakan untuk mengubah karakter ASCII ke nilai desimal berdasarkan variabel kecil
+    
+    * atas=$(printf \\$(printf '%03o' $atas)) mengembalikan ke karakter ASCII batas atas
+  
+  * Mencari format save dalam waktu jam:menit tanggal-bulan-tahun
+  
+    * jam=`date "+%X" | awk -F: '{print $1}'` digunakan untuk mencari jam
+    
+    * menit=`date "+%X" | awk -F: '{print $2}'` digunakan untuk mencari menit
+    
+    * tanggal=`date | awk '{print $3}'` digunakan untuk mencari tanggal
+    
+    * bulan=`date | awk '{print $2}'` digunakan untuk mencari bulan
+    
+    * tahun=`date | awk '{print $6}'` digunakan untuk mencari tahun
+    
+  * cat /var/log/syslog | tr [a-z] ["$kecil"-za-"$bawah"] | tr [A-Z] ["$besar"-ZA-"$atas"] > "$jam:$menit 
+  
+    $tanggal-$bulan-$tahun".txt digunakan untuk menyimpan file dan mengenkripsi file tersebut
+ 
+* Dekripsi
+  
+  * Mencari batas atas dan bawah huruf kecil dari 97 - 122
+  
+    * dkecil=$(printf \\$(printf '%03o' $dkecil)) digunakan untuk mengubah nilai desimal ke karakter ASCII
+
+    * dbawah=$(printf '%d' "'$dkecil") digunakan untuk mengubah karakter ASCII ke nilai desimal dari variabel dkecil
+    
+    * dbawah=$(printf \\$(printf '%03o' $dbawah)) digunakan untuk mengubah nilai desimal ke karakter ASCII
+    
+  * Mencari batas atas dan bawah huruf besar dari 65 - 90
+  
+    * cbesar=$(printf \\$(printf '%03o' $cbesar)) digunakan untuk mengubah nilai desimal ke ASCII karakter batas bawah
+
+    * datas=$(printf '%d' "'$cbesar") digunakan untuk mengubah karakter ASCII ke nilai desimal berdasarkan variabel kecil
+    
+    * datas=$(printf \\$(printf '%03o' $datas)) mengembalikan ke karakter ASCII batas atas
+
+  * cat "$jam:$menit $tanggal-$bulan-$tahun".txt | tr [a-z] ["$dkecil"-za-"$dbawah"] | tr [A-Z] ["$cbesar"-ZA-"$datas"] > 
+  
+    "$jam:$menit $tanggal-$bulan-$tahun-decrypted".txt digunakan untuk menyimpan file dan mendekripsi dari file enkripsi
+    
+5. Buatlah sebuah script bash untuk menyimpan record dalam syslog yang memenuhi kriteria berikut:
+
+    a. Tidak mengandung string “sudo”, tetapi mengandung string “cron”, serta buatlah pencarian stringnya tidak bersifat case sensitive, sehingga huruf kapital atau tidak, tidak menjadi masalah.
+
+    b. Jumlah field (number of field) pada baris tersebut berjumlah kurang dari 13.
+
+    c. Masukkan record tadi ke dalam file logs yang berada pada direktori /home/[user]/modul1.
+
+    d. Jalankan script tadi setiap 6 menit dari menit ke 2 hingga 30, contoh 13:02, 13:08, 13:14, dst.
+
+<h3>Jawab : </h3>
+  
+[Source Code](https://github.com/idlavoNuyaB/SoalShift_modul1_A09/blob/master/soal5.sh)
+
+<h3>Langkahnya : </h3>
+
+* Memfilter menggunakan awk dengan 
+
+  * tolower($0) ~ yang digunakan untuk melowercasekan karakter
+  
+  * /cron/ , /!sudo/ digunakan untuk mengecek jika ada kata cron dan tidak ada kata sudo
+  
+  * NF < 13 digunakan untuk mengecek jumlah kata jika kurang dari 13 maka tidak di print
+  
+* Crontabnya
+
+> @hourly /bin/bash /home/arvanna/soal5.sh
+
