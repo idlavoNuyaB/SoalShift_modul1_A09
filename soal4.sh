@@ -6,10 +6,10 @@ waktu=`date "+%X" | awk -F : '{print $1}'`
 #konvert string ke int
 waktu=$(echo "$waktu" | bc)
 
-#batas bawah a ke huruf lain
+#batas bawah a ke huruf lain dengan mengubah decimal ke ascii
 kecil=$(($waktu + 97))
 kecil=$(printf \\$(printf '%03o' $kecil))
-#batas atas z ke huruf lain
+#batas atas z ke huruf lain dengan mengembalikin ascii ke decimal lalu ke ascii lagi
 bawah=$(printf '%d' "'$kecil")
 bawah=$(($bawah-1))
 if [ $bawah -lt 97 ]
@@ -18,10 +18,10 @@ then
 fi
 bawah=$(printf \\$(printf '%03o' $bawah))
 
-#batas bawah A ke huruf lain
+#batas bawah A ke huruf lain decimal ascii
 besar=$(($waktu+65))
 besar=$(printf \\$(printf '%03o' $besar))
-#batas atas Z ke huruf lain
+#batas atas Z ke huruf lain ascii decimal ascii
 atas=$(printf '%d' "'$besar")
 let atas--
 if [ $atas -lt 65 ]
@@ -42,14 +42,14 @@ cat /var/log/syslog | tr [a-z] ["$kecil"-za-"$bawah"] | tr [A-Z] ["$besar"-ZA-"$
 
 #decrypt
 waktu=$(($waktu-1))
-#batas bawah (a jadi apa) huruf kecil
+#batas bawah huruf kecil decimal ascii
 dkecil=$((122-$waktu))
 if [ $dkecil -gt 122 ]
 then
     a=97
 fi
 dkecil=$(printf \\$(printf '%03o' $dkecil))
-#batas atas huruf kecil
+#batas atas huruf kecil ascii decimal ascii
 dbawah=$(printf '%d' "'$dkecil")
 let dbawah--
 if [ $dbawah -lt 97 ]
@@ -58,14 +58,14 @@ then
 fi
 dbawah=$(printf \\$(printf '%03o' $dbawah))
 
-#batas bawah (A jadi apa) huruf besar
+#batas bawah huruf besar decimal ascii
 cbesar=$((90-$waktu))
 if [ $cbesar -gt 90 ]
 then
     cbesar=65
 fi
 cbesar=$(printf \\$(printf '%03o' $cbesar))
-#batas atas huruf besar
+#batas atas huruf besar ascii decimal ascii
 datas=$(printf '%d' "'$cbesar")
 let datas--
 if [ $datas -lt 65 ]
