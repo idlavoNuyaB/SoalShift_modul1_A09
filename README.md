@@ -199,6 +199,10 @@ Perbedaan antara poin b dan c terletak pada
   * cat "$jam:$menit $tanggal-$bulan-$tahun".txt | tr [a-z] ["$dkecil"-za-"$dbawah"] | tr [A-Z] ["$cbesar"-ZA-"$datas"] > 
   
     "$jam:$menit $tanggal-$bulan-$tahun-decrypted".txt digunakan untuk menyimpan file dan mendekripsi dari file enkripsi
+   
+* Crontabnya
+
+      @hourly /bin/bash /home/arvanna/soal4.sh
     
 5. Buatlah sebuah script bash untuk menyimpan record dalam syslog yang memenuhi kriteria berikut:
 
@@ -226,5 +230,5 @@ Perbedaan antara poin b dan c terletak pada
   
 * Crontabnya
 
-      @hourly /bin/bash /home/arvanna/soal5.sh
+      2-30/6 * * * * /bin/bash /home/arvanna/soal5.sh
 
