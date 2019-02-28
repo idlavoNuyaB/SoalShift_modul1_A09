@@ -29,15 +29,15 @@ do
 	then
     	cacad=65
 	fi
-	cacad=$(printf \\$(printf '%03o' $c))
+	cacad=$(printf \\$(printf '%03o' $cacad))
 #batas atas huruf besar
 	dash=$(printf '%d' "'$c")
-	dash=$(($d-1))
+	dash=$(($dash-1))
 	if [ $dash -lt 65 ]
 	then
     	dash=90
 	fi
-	dash=$(printf \\$(printf '%03o' $d))
+	dash=$(printf \\$(printf '%03o' $dash))
 	y=$(echo $x | awk -F / '{print $3}')
  	cat "$x" | tr [a-z] ["$atas"-za-"$bawah"] | tr [A-Z] ["$cacad"-ZA-"$dash"]  > modul1/"$y"
 done
